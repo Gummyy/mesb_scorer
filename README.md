@@ -18,7 +18,7 @@ Afin de faciliter la gestion des résultats au cours d'un tournoi et de ne conse
  * Possibilité d'utiliser l'application sur un téléphone mobile, grace à une interface responsive
  
 # Installation
-Télécharger l'application sous la forme d'un fichier unique mesbg_scorer.html, disponible à cette adresse `http://lien.vers.le/fichier_compile.html`
+Télécharger la dernière version de l'application sous la forme d'un fichier unique mesbg_scorer.html, disponible à cette adresse `https://github.com/Gummyy/mesb_scorer/releases/`
 Pour gérer les inscriptions du tournoi plusieurs possibilités :
  * (à venir) Le site web de DAVAX, via l'option `Générer un fichier d'inscriptions pour MESBG_scorer`. Pour la version hors-ligne, après avoir téléchargé ce fichier, il est possible de l'importer dans MESBG_Scorer.
  * L'application possède également une interface permettant de saisir les pseudos, les noms des joueurs et le nom de l'armée des participants
