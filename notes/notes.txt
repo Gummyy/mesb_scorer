@@ -1,0 +1,114 @@
+Nommer la sauvegarde en fonction du moment où elle a lieu
+(save_round1)
+	=> Sans suite
+		=> OK
+
+Corriger le nom de la page "Rechercher"
+	=> URGENT
+		=> OK
+
+Ajouter l'option imported_appariements dans le json
+	=> Sans suite.
+		=> OK
+
+Ajouter une option "Conserver l'ordre des joueurs" pour le premier appariement
+	=> Utile. Par défaut, elles sont prises telles que chargées
+		=> OK
+
+Ajouter la gestion des joueurs qui jouent souvent ensemble
+	=> VITALE
+		=> OK
+
+Ajouter l'option "Revenir en arrière" sur la page prêt à commencer
+	=> Vital
+		=> OK
+
+Ajouter le nom et l'armée des joueurs
+	=> Utile. A confirmer l'ensemble des données
+		=> EN ATTENTE
+
+Afficher un warning pour les appariements où l'écart de score total est supérieur à 3
+	=> Utile.
+		=> OK
+
+Trouver l'élément à l'origine du rechargement de la page
+	=> Utile. A priori, il n'y en a pas
+		=> OK
+
+Ajouter l'option recherche* pour n'avoir qu'un joueur dans l'affichage des résultats
+	=> Utile
+		=> OK
+
+Corriger le message avec les salles (actualisation qui n'a pas lieu ? Deuxième joueur ayant joué sur la table qui n'a pas lieu ?)
+	=> Important
+		=> PROBABLEMENT OK. Correction d'un bug qui enregistrait les parties en strings plutôt qu'en int
+
+Corriger la recherche par nom de joueur pour l'affichage "Résultats"
+	=> Important
+		=> OK
+Empêcher de terminer un round lorsque toutes les tables n'ont pas fini, si une recherche est en cours
+	=> Important
+		=> OK
+
+Mettre à jour save.json pour qu'il contienne les scenarios
+	=> Pas sûr de comment je gère ça. Sans suite
+		=> OK
+
+Mettre à jour l'affichage des parties ayant été modifiées, pour ne garder que celles qui ont effectivement été modifiées.
+	=> Utile. Ajout de la possibilité de ne voir que les résultats qui ont été modifiés après que le round ait été terminé.
+		=> OK
+
+Ajouter des racourcis de clavier pour accélérer la navigation
+	=> Utile
+		=> A faire
+
+Interface d'inscriptions
+	=> Vitale
+		=> OK
+------------------------
+
+Demander à Shaka :
+	- l'ensemble des données issues de DAVAX que l'on souhaite conserver pour une éventuelle analyse des résultats après le déroulement du tournoi.
+	- lui donner la structure du json qu'il doit demander à DAVAX de me fournir en conséquence. Il s'agit également de mettre en place une option "Exporter les inscriptions pour MESBG_scorer" idéalement.
+	- lui demander la liste des joueurs qui jouent souvent ensemble afin de créer les groupes.
+Pour l'instant, j'ai mis :
+const players_affinity = [
+        [
+            "Manadar", "decalogus"
+        ],
+        [
+            "Fleau_le_Preux", "Le_Preux_Shawn"
+        ],
+        [
+            "Thelion_AOE", "Raphdu78", "Alexdu78"
+        ],
+        [
+            "Captnnarsice", "Captnfrene", "Hugzzzy"
+        ],
+        [
+            "HeStan", "tordek_urside", "Le-Voyageur"
+        ],
+        [
+            "Frere_derebor1", "FRERES-D-EREBOR"
+        ]
+]
+
+--------------
+
+Régénérer ne fonctionne pas.
+	=> OK
+
+Vertical align le menu && Make it pretty
+	=> TO DO
+
+Ajouter des infos sur le temps (timer ?)
+Dernier tour ?	
+	=> OK
+
+Virer le select qui apparaît en haut de l'écran (apparemment, c'est le nombre de tours ou peut être le dernier select dans lequel on a tapé)
+	=> TO DO
+
+Remplacer le ajouter un player par une icone "+"
+	=> OK
+
+Remplacer le col-6 / col-2 sur les tables pour le nombre de tours joués
