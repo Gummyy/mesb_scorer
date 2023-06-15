@@ -6,7 +6,9 @@ En effet, la saisie de données dans un document excel comporte un certain nombr
  * Nécessité de maîtriser le formalisme d'excel et les opérations utiles à la résolution des appariements, qui peuvent être complexes
  * Lourdeur des opérations de recherche et de l'interface, qui peuvent rendre difficile l'accès à des informations régulièrement nécessaires
  * Nécessité de saisir beaucoup de données additionnelles et de gérer beaucoup d'éléments à la main, pouvant entraîner des erreurs en plus des erreurs de saisie
+
 Afin de faciliter la gestion des résultats au cours d'un tournoi et de ne conserver que la saisie des scores pour l'utilisateur, cette application dispose des fonctionnalités suivantes :
+
  * Gestion automatique des appariements, permettant de générer des appariements valides respectant le plus précisément possible les méthodes actuellement mises en place, avec un certain nombre d'options permettant de maîtriser au mieux ce qui est réalisé.
  * Recherche rapide des informations : on peut rechercher un résultat par le nom d'un des deux joueurs, le numéro de la table, le nom de la table s'il y en a et le round
  * Saisie contrôlée des résultats : on ne doit saisir que le score de la partie, dont on vérifie qu'il correspond bien à deux entiers entre 0 et 12. Les points issus de ce résultat sont calculés et attribués aux joueurs en fin de round.
@@ -16,15 +18,14 @@ Afin de faciliter la gestion des résultats au cours d'un tournoi et de ne conse
  * Possibilité d'utiliser l'application sur un téléphone mobile, grace à une interface responsive
  
 # Installation
-Pour la version hors-ligne, télécharger l'application sous la forme d'un fichier unique mesbg_scorer.html, disponible à cette adresse `http://lien.vers.le/fichier_compile.html`
-Pour la version en ligne, se rendre à l'adresse `http://adresse.de.lappli/`. Il est nécessaire de créer un compte.
+Télécharger l'application sous la forme d'un fichier unique mesbg_scorer.html, disponible à cette adresse `http://lien.vers.le/fichier_compile.html`
 Pour gérer les inscriptions du tournoi plusieurs possibilités :
- * Le site web de DAVAX, via l'option `Générer un fichier d'inscriptions pour MESBG_scorer`. Pour la version hors-ligne, après avoir téléchargé ce fichier, il suffit de le placer à côté de mesbg_scorer.html. Pour la version en ligne, utiliser l'option `Importer les inscriptions depuis le site de DAVAX`
+ * (à venir) Le site web de DAVAX, via l'option `Générer un fichier d'inscriptions pour MESBG_scorer`. Pour la version hors-ligne, après avoir téléchargé ce fichier, il est possible de l'importer dans MESBG_Scorer.
  * L'application possède également une interface permettant de saisir les pseudos, les noms des joueurs et le nom de l'armée des participants
 Une fois les inscriptions importées ou créées, l'application n'a plus besoin d'aucune ressource exterieure pour fonctionner
 
 # Utilisation
-Une vidéo explicative des différentes fonctionnalités détaillées dans cette section est disponible à cette adresse : `http://www.youtube.com/video`
+(à venir) Une vidéo explicative des différentes fonctionnalités détaillées dans cette section est disponible à cette adresse : `http://www.youtube.com/video`
 
 ## Gestion des appariements
 La gestion des appariements utilise les options sélectionnables suivantes :
@@ -40,7 +41,8 @@ La deuxième étape crée l'appariement.
 Pour le premier round, deux méthodes sont possibles :
  * Utiliser l'ordre d'importation des données, si l'appariement a déjà été fait au préalable via une autre méthode
  * Utiliser un ordre aléatoire, que l'on peut régénérer autant de fois qu'on le souhaite et modifier, si on le souhaite, les appariements restants à la main
-Lors de la création du round, l'option "Ignorer les groupes d'affinité" est par défaut décochée et permet aux joueurs d'un même groupe régulier de ne pas s'affronter.
+Lors de la création du round, l'option "Ignorer les groupes d'affinité" est par défaut décochée et permet aux joueurs jouant régulièrement ensemble de ne pas s'affronter.
+Par défaut, la première proposition d'appariements utilise l'ordre d'importation des données, que l'on peut ensuite rendre aléatoire à l'aide du bouton *Régénérer*
 
 ### Rounds suivants
 L'appariement utilise cet algorithme :
@@ -112,12 +114,10 @@ Cette vue permet d'accéder au classement. Elle est accessible de deux manières
 Lorsque tous les résultats du round sont renseignés, l'option "Terminer le round" est disponible. Ce n'est qu'après avoir fini un round que l'on peut consulter les résultats du round.
 
 ## Sauvegarder
-Il est possible à tout moment (pendant l'appariement, la saisie des scores, avant l'appariement du prochain round, ...) de sauvegarder l'ensemble des données de l'application en utilisant le bouton "Sauvegarder".
+Il est possible à tout moment (pendant les inscriptions, l'appariement, la saisie des scores, avant l'appariement du prochain round, ...) de sauvegarder l'ensemble des données de l'application en utilisant le bouton "Sauvegarder".
 Ce bouton déclenche le téléchargement d'un fichier nommé save.json.
 
-Si l'on souhaite poursuivre un tournoi sur un autre périphérique ou reprendre dans tout autre cas à partir d'une sauvegarde, il est nécessaire de :
- * Pour la version hors-ligne : placer le fichier save.json à côté de mesbg_scorer.html avant de lancer l'application
- * Pour la version en ligne : utiliser l'option "Charger une sauvegarde" dans la version
+Si l'on souhaite poursuivre un tournoi sur un autre périphérique ou reprendre dans tout autre cas à partir d'une sauvegarde, il suffit de recharger la page ou de relancer MESBG_Scorer et d'importer la sauvegarde ainsi obtenue.
 
 Dans les deux cas, l'application rechargera l'ensemble des données présentes lors de la sauvegarde à l'exception des filtres et de la recherche en cours, qui seront donc à saisir à nouveau.
 
