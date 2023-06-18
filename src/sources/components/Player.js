@@ -19,14 +19,23 @@ export default function Player(props) { // player, round_number
                 </div>
             </div>
             {props.player["points"][props.round_number-1] !== undefined &&
-            (<div className='row'>
-                <div className='col'>
-                    Score<br />
-                    {parseInt(props.player["points"][props.round_number-1]) - last_round_score}
+            (
+            <div>
+                <div className='row'>
+                    <div className='col'>
+                        Score
+                    </div>
+                    <div className='col'>
+                        Goal average
+                    </div>
                 </div>
-                <div className='col'>
-                    Goal average<br />
-                    {parseInt(props.player["goalaverages"][props.round_number-1]) - last_round_goalaverage}
+                <div className='row'>
+                    <div className='col'>
+                        {parseInt(props.player["points"][props.round_number-1]) - last_round_score}    
+                    </div>
+                    <div className='col'>
+                        {parseInt(props.player["goalaverages"][props.round_number-1]) - last_round_goalaverage}
+                    </div>
                 </div>
             </div>)}
         </div>

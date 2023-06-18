@@ -146,6 +146,11 @@ export default function Tournament(props) {
                     "seed": elt["name"] == " " ? 0 : Math.random()
                 }
             }).sort((a, b) => {
+                if(a["name"].replace(/\s/g, '').length == 0) {
+                    return 1000;
+                } else if(b["name"].replace(/\s/g, '').length == 0) {
+                    return -1000;
+                }
                 return b.seed - a.seed;
             });
 
@@ -173,8 +178,8 @@ export default function Tournament(props) {
         }
         console.log("Round 1")
         console.log(first_results);
-        console.log("Randomize = ");
-        console.log(randomize_first_pairs);
+        //console.log("Randomize = ");
+        //console.log(randomize_first_pairs);
         setRandomizeFirstPairs(true);
         setNewResultsData(first_results);
     };
@@ -266,7 +271,8 @@ export default function Tournament(props) {
         }
 
         const blob = new Blob([JSON.stringify(data)], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "save.json");
+        const cur_date = new Date();
+        saveAs(blob, `${cur_date.getFullYear()}-${cur_date.getMonth()+1}-${cur_date.getUTCDate()}__${cur_date.getHours()}-${cur_date.getMinutes()}-${cur_date.getSeconds()}.json`);
     }
 
     const get_last_round = function() {
@@ -333,17 +339,17 @@ export default function Tournament(props) {
         setResults((results) => {
             return results.map(result => {
                 if(result.round_number == cur_round && result.table == cur_table) {
-                        result.player1_score = cur_player1_score;
-                        result.player2_score = cur_player2_score;
-                        result.player1_points = points[0];
-                        result.player2_points = points[1];
-                        result.nb_tours = parseInt(nb_tours);
-                        result.duration = result.duration == 0 ? new Date().getTime() - rounds[active_round - 1]["started_at"] : result.duration;
-                        result.state = "Terminé";
-                        console.log("Saving score : " + JSON.stringify(result));
+                    result.player1_score = cur_player1_score;
+                    result.player2_score = cur_player2_score;
+                    result.player1_points = points[0];
+                    result.player2_points = points[1];
+                    result.nb_tours = parseInt(nb_tours);
+                    result.duration = result.duration == 0 ? new Date().getTime() - rounds[cur_round - 1]["started_at"] : result.duration;
+                    result.state = "Terminé";
+                    console.log("Saving score : " + JSON.stringify(result));
 
-                        player1_name = result.player1;
-                        player2_name = result.player2;
+                    player1_name = result.player1;
+                    player2_name = result.player2;
                 }
                 return result;
             })
@@ -391,7 +397,7 @@ export default function Tournament(props) {
                     } else if(edittype == "player2") {
                         result["player2"] = new_value;
                     }
-                } else if(  (edittype == "table" && result["table"] == new_value) ||
+                } else if(  (edittype == "table" && result["table"] == parseInt(new_value)) ||
                             (edittype == "player1" && (result["player1"] == new_value || result["player2"] == new_value)) ||
                             (edittype == "player2" && (result["player1"] == new_value || result["player2"] == new_value))) {
                     if(edittype == "table") {
@@ -419,8 +425,16 @@ export default function Tournament(props) {
     const make_pairs = function() {
         // Sorts the players by their score and pair them
         const cur_round = rounds.length + 1;
+        let nb_dead_players = players_data.filter((player) => player["name"].replace(/\s/g, '').length == 0).length;
         
         const sorted_players = players_data.sort((a, b) => {
+            // Checks if one of the player is a dead player (its name is only made of multiple spaces)
+            if(a["name"].replace(/\s/g, '').length == 0) {
+                return 1000;
+            } else if(b["name"].replace(/\s/g, '').length == 0) {
+                return -1000;
+            }
+
             return b.results_with_goalaverage[cur_round - 2] - a.results_with_goalaverage[cur_round - 2];
         });
 
@@ -435,7 +449,7 @@ export default function Tournament(props) {
             let player2 = -1;
             for(let j = i+1; j < sorted_players.length; j++) {
                 // We check if the player has already been added to the new_results
-                if(new_results.map((result) => result["player2"]).includes(sorted_players[j]["name"])) {
+                if(new_results.map((result) => result["player2"]).includes(sorted_players[j]["name"]) || (sorted_players[i]["name"].replace(/\s/g, '').length == 0 && nb_dead_players%2 == 0)) {
                     continue;
                 }
 
@@ -460,56 +474,81 @@ export default function Tournament(props) {
                     }
                 }
             }
-            if(player2 == -1) {
+            if(player2 == -1) { // We don't care about any option and just pick up the next available player
                 //alert("Le joueur "+ sorted_players[i]["name"] +" a déjà joué contre tous les joueurs non appareillés !");
-            } else {  // We found a player to play with
-                console.log("Player "+ sorted_players[player2]["name"] +" (" + (player2+1) +") has "+ sorted_players[player2]["results_with_goalaverage"][cur_round - 2] +" points");
-                let player1 = i;
-                // Search for the next table
-                let played_tables = [...sorted_players[player1]["tables_played"], ...sorted_players[player2]["tables_played"], ...new_results.map((result) => result["table"])];
-                console.log("Played tables : ")
-                console.log(played_tables);
-                let table = -1
-                for(let k = 1; k <= sorted_players.length / 2; k++) {
-                    if(ignoreTables && !new_results.map((result) => result["table"]).includes(k)) {
-                        table = k;
-                        break;
-                    } else if(!played_tables.includes(k)) {
-                        table = k;
+                for(let j = i+1; j < sorted_players.length; j++) {
+                    // We check if the player has already been added to the new_results
+                    if(new_results.map((result) => result["player2"]).includes(sorted_players[j]["name"]) || (sorted_players[i]["name"].replace(/\s/g, '').length == 0 && nb_dead_players%2 == 0)) {
+                        continue;
+                    } else {
+                        player2 = j;
                         break;
                     }
                 }
 
-                if(table == -1) {
-                    // alert("Les joueurs "+ sorted_players[player1]["name"] + " et "+ sorted_players[player2]["name"] +" ont, à eux deux, déjà joué sur toutes les tables disponibles !")
-                    // We search for another table which is just available
-                    played_tables = new_results.map((result) => result["table"]);
-                    for(let k = 1; k <= sorted_players.length / 2; k++) {
-                        if(!played_tables.includes(k)) {
-                            table = k;
-                        }
-                    }
-                    if(table == -1) {
-                        //alert("Il n'y a plus de tables disponibles !");
-                        return new_results;
+                if(player2 == -1) {
+                    alert(`Erreur lors de l'appariement de ${sorted_players[i]["name"]} : aucun joueur non appareillé restant. Il manque un appariement !`);
+                } else {
+                    console.log(`Attention ! Lors de l'appariement de ${sorted_players[i]["name"]}, il a été impossible de satisfaire les options demandées.`);
+                }
+            } 
+            
+            //console.log("Player "+ sorted_players[player2]["name"] +" (" + (player2+1) +") has "+ sorted_players[player2]["results_with_goalaverage"][cur_round - 2] +" points");
+            let player1 = i;
+
+            if(sorted_players[player1]["name"].replace(/\s/g, '').length == 0) {
+                nb_dead_players--;
+            }
+            if(sorted_players[player2]["name"].replace(/\s/g, '').length == 0) {
+                nb_dead_players--;
+            }
+
+            // Search for the next table
+            let played_tables = [...sorted_players[player1]["tables_played"], ...sorted_players[player2]["tables_played"], ...new_results.map((result) => result["table"])];
+            //console.log("Played tables : ")
+            //console.log(played_tables);
+            let table = -1
+            for(let k = 1; k <= sorted_players.length / 2; k++) {
+                if(ignoreTables && !new_results.map((result) => result["table"]).includes(k)) {
+                    table = k;
+                    break;
+                } else if(!played_tables.includes(k)) {
+                    table = k;
+                    break;
+                }
+            }
+
+            if(table == -1) {
+                // alert("Les joueurs "+ sorted_players[player1]["name"] + " et "+ sorted_players[player2]["name"] +" ont, à eux deux, déjà joué sur toutes les tables disponibles !")
+                // We search for another table which is just available
+                played_tables = new_results.map((result) => result["table"]);
+                for(let k = 1; k <= sorted_players.length / 2; k++) {
+                    if(!played_tables.includes(k)) {
+                        table = k;
                     }
                 }
-                console.log("Table : "+ table +"\n-----------------\n");
-                new_results.push({
-                    "round_number": cur_round,
-                    "player1": sorted_players[player1]["name"],
-                    "player2": sorted_players[player2]["name"],
-                    "table": table,
-                    "player1_score": "",
-                    "player2_score": "",
-                    "player1_points": 0,
-                    "player2_points": 0,
-                    "duration": 0,
-                    "nb_tours": "",
-                    "state": "Création en cours",
-                    "commentaires": []
-                });
+                if(table == -1) {
+                    alert(`Erreur lors de l'appariement de ${sorted_players[player1]["name"]} et ${sorted_players[player2]["name"]} : aucune table non utilisée restante. Il manque un appariement !`);
+                    return new_results;
+                } else {
+                    console.log(`Attention ! Lors de l'appariement de ${sorted_players[player1]["name"]} et ${sorted_players[player2]["name"]}, aucune table n'a permis de satisfaire les options demandées.`);
+                }
             }
+            //console.log("Table : "+ table +"\n-----------------\n");
+            new_results.push({
+                "round_number": cur_round,
+                "player1": sorted_players[player1]["name"],
+                "player2": sorted_players[player2]["name"],
+                "table": table,
+                "player1_score": "",
+                "player2_score": "",
+                "player1_points": 0,
+                "player2_points": 0,
+                "duration": 0,
+                "nb_tours": "",
+                "state": "Création en cours",
+                "commentaires": []
+            });
         }
 
         console.log("Round "+ cur_round +" :");
@@ -519,6 +558,11 @@ export default function Tournament(props) {
 
     const handleNewRound = function(event) {
         event.preventDefault();
+
+        if(randomize_first_pairs && new_round_displayed) {
+            setRandomizeFirstPairs(false);
+        }
+
         setNewRoundDisplayed((elt) => !elt);
         if(new_round_displayed) {
             setNewResultsData([])  // We reset the new_round_data
@@ -546,6 +590,7 @@ export default function Tournament(props) {
                     setNewRoundData({
                         ...round,
                         "state": "Création en cours",
+                        "scenario": ""
                     });
                     setNewScenario(round["scenario"]);
                     return false;
@@ -791,7 +836,7 @@ export default function Tournament(props) {
                             }
                         }
                     )})
-                    return result["commentaires"].includes(commentaires) ? result : {...result, "commentaires": [...result["commentaires"], commentaires]}
+                    return result["commentaires"][result["commentaires"].length - 1] === commentaires ? result : {...result, "commentaires": [...result["commentaires"], commentaires]};
                 }
             });
         });
@@ -921,13 +966,13 @@ export default function Tournament(props) {
                 </div>
 
                 <div className="row">
-                    <div className="col text-begin">
+                    <div className="col-7 text-begin">
                         <label htmlFor="viewUnfinishedRounds" className="form-check-label mx-1">Rounds en cours</label>
-                        <input type="checkbox" className="form-check-input me-5" id="viewUnfinishedRounds" name="viewUnfinishedRounds" checked={viewUnfinished} onChange={handleViewUnfinishedChange} />
+                        <input type="checkbox" className="form-check-input me-4" id="viewUnfinishedRounds" name="viewUnfinishedRounds" checked={viewUnfinished} onChange={handleViewUnfinishedChange} />
                         <label htmlFor="viewFinishedRounds" className="form-check-label mx-1">Rounds terminés</label>
                         <input type="checkbox" className="form-check-input" id="viewFinishedRounds" name="viewFinishedRounds" checked={viewFinished} onChange={handleViewFinishedChange} />
                     </div>
-                    <div className='col text-end'>
+                    <div className='col-5 text-end'>
                         <label htmlFor="detailedView" className="form-check-label mx-1">Vue détaillée</label>
                         <input type="checkbox" className="form-check-input" id="detailedView" name="detailedView" checked={detailedView} onChange={handleDetailedViewChange} />
                     </div>
@@ -936,7 +981,8 @@ export default function Tournament(props) {
             {current_view == "rounds" && filtered_rounds.map((round) => {
                 return <Round   key={round["round_number"]} round={round} results={filtered_results.filter((result) => result["round_number"] == round["round_number"])}
                                 players={players_data} saveScore={saveScore} handleStartRound={handleStartRound} handleEndRound={handleEndRound} handleEditRound={handleEditRound}
-                                handleEditAppariement={handleEditAppariement} tables_names={tables_names} handleBackToPairs={handleBackToPairs} detailedView={detailedView}/>
+                                handleEditAppariement={handleEditAppariement} tables_names={tables_names} handleBackToPairs={handleBackToPairs} detailedView={detailedView}
+                                are_same_affinity={are_same_affinity}/>
                 })}
 
                 {current_view == "rounds" && 
@@ -955,7 +1001,7 @@ export default function Tournament(props) {
                 <h2>Nouveau round :</h2>
                 <form>
                     <div className='row'>
-                        <div className='col'>
+                        <div className='col-sm'>
                             <label htmlFor="newScenario" className="form-label">Scénario</label>
                             <select className="form-select" id="newScenario" name="newScenario" value={new_scenario} onChange={handleNewScenarioChange}>
                                 <option value=""></option>
@@ -964,7 +1010,7 @@ export default function Tournament(props) {
                                 })}
                             </select>
                         </div>
-                        <div className='col'>
+                        <div className='col-sm'>
                             <div className='row'>
                                 <div className='col'>
                                     <label htmlFor="ignoreTables" className="form-check-label mx-1 mt-3">Ignorer les précédentes tables occupées </label>
@@ -998,7 +1044,8 @@ export default function Tournament(props) {
                     </div>
                 </form>
                 <Round  round={new_round_data} results={new_results_data} saveScore={undefined} players={players_data} handleStartRound={undefined} handleEndRound={undefined}
-                        handleEditRound={undefined} handleEditAppariement={handleEditAppariement} tables_names={tables_names} handleBackToPairs={undefined} detailedView={true} />
+                        handleEditRound={undefined} handleEditAppariement={handleEditAppariement} tables_names={tables_names} handleBackToPairs={undefined} detailedView={detailedView}
+                        are_same_affinity={are_same_affinity}/>
                 <form>
                     <div className="row">
                         <div className="col text-end">

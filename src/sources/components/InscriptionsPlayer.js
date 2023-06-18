@@ -43,7 +43,7 @@ export default function InscriptionsPlayer(props) {
         <form>
             <div className='row my-4'>
                 <div className='col'>
-                    <label htmlFor={`P${props.player["full_name"]}_N${props.player["name"]}__full_name`}>Nom complet</label>
+                    <label htmlFor={`P${props.player["full_name"]}_N${props.player["name"]}__full_name`}>Nom</label>
                     <input type="text" className="form-control" id={`P${props.player["full_name"]}_N${props.player["name"]}__full_name`} name={`P${props.player["full_name"]}_N${props.player["name"]}__full_name`} value={new_player_full_name} onChange={handlefull_nameChange} />
                 </div>
                 <div className='col'>

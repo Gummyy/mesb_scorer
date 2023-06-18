@@ -4,65 +4,6 @@ import Player from './Player.js';
 import Commentaire from './Commentaire.js'
 
 export default function Table(props) {
-    //console.log("Trying to create the table "+ props.table_number +" for round "+ props.round_number);
-    //console.log("Round data : " + JSON.stringify(props.result));
-
-    const players_affinity = [
-        [
-            "Manadar", "decalogus"
-        ],
-        [
-            "Fleau_le_Preux", "Le_Preux_Shawn"
-        ],
-        [
-            "Thelion_AOE", "Raphdu78", "Alexdu78"
-        ],
-        [
-            "Captnnarsice", "Captnfrene", "Hugzzzy"
-        ],
-        [
-            "HeStan", "tordek_urside", "Le-Voyageur"
-        ],
-        [
-            "Frere_derebor1", "FRERES-D-EREBOR"
-        ]
-    ]
-
-    const HHmmss_time = (duration, type) => {
-        let positive = duration >= 0;
-        if(!positive) {
-            duration = -duration
-        }
-        duration = parseInt(duration / 1000);
-        const SS = duration % 60;
-        duration = parseInt(duration / 60);
-        const MM = duration % 60;
-        duration = parseInt(duration / 60);
-        
-        if(type == "timer") {
-            return `${positive ? '' : '-'}${duration.toString().padStart(2, '0')}:${MM.toString().padStart(2, '0')}:${SS.toString().padStart(2, '0')}`;
-        } else if(type == "spoken") {
-            if(duration == 0) {
-                if(MM == 0) {
-                    return `${positive ? '' : '-'}${SS} seconde${SS > 1 ? 's' : ''}`
-                } else {
-                    return `${positive ? '' : '-'}${MM} minute${MM > 1 ? 's' : ''} et ${SS} seconde${SS > 1 ? 's' : ''}`
-                }
-            } else {
-                return `${positive ? '' : '-'}${duration} heure${duration > 1 ? 's' : ''}, ${MM} minute${MM > 1 ? 's' : ''} et ${SS} seconde${SS > 1 ? 's' : ''}`
-            }
-        }
-    }
-
-    const are_same_affinity = (player1_name, player2_name) => {
-        for(let i = 0; i < players_affinity.length; i++) {
-            if(players_affinity[i].includes(player1_name) && players_affinity[i].includes(player2_name)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     let [player1_score, setPlayer1Score] = React.useState(props.result["player1_score"]);
     let [player2_score, setPlayer2Score] = React.useState(props.result["player2_score"]);
@@ -83,8 +24,8 @@ export default function Table(props) {
         setSelectPlayer1(props.result["player1"]);
         setSelectPlayer2(props.result["player2"]);
         setSelectTable(props.result["table"]);
-    }, [props.result])
-
+    }, [props.result]);
+    
     const handleScoreChange = (event) => {
         event.preventDefault();
         //console.log("Score change : " + event.target.value);
@@ -159,7 +100,7 @@ export default function Table(props) {
     let player2 = props.players.filter((player) => player["name"] == props.result["player2"])[0];
     let tables = Array.from({length: props.players.length/2}, (_, i) => i + 1);
     let score_difference = player1["results_with_goalaverage"][props.result["round_number"] - 2] - player2["results_with_goalaverage"][props.result["round_number"] - 2]
-    let same_affinity = are_same_affinity(player1["name"], player2["name"]);
+    let same_affinity = props.are_same_affinity(player1["name"], player2["name"]);
 
     /*console.log("Table "+ props.result["table"]);
     console.log(`Tables played by ${player1["name"]} :`);
@@ -256,9 +197,9 @@ export default function Table(props) {
                                         return <option value={other_player1["name"]} key={other_player1["name"]}>{other_player1["name"]} - {other_player1["name"]} a déjà joué sur la table {props.result["table"]}{props.tables_names[props.result["table"] - 1] && (" - " + props.tables_names[props.result["table"] - 1])}</option>
                                     } else if(player1["tables_played"].includes(other_table)) {
                                         return <option value={other_player1["name"]} key={other_player1["name"]}>{other_player1["name"]} - {player1["name"]} a déjà joué sur la table {other_table}{props.tables_names[other_table - 1] && (" - " + props.tables_names[other_table - 1])}</option>
-                                    } else if(are_same_affinity(other_player1["name"], player2["name"])) {
+                                    } else if(props.are_same_affinity(other_player1["name"], player2["name"])) {
                                         return <option value={other_player1["name"]} key={other_player1["name"]}>{other_player1["name"]} - {player2["name"]} et {other_player1["name"]} jouent souvent ensemble</option>
-                                    } else if(are_same_affinity(other_player2["name"], player1["name"])) {
+                                    } else if(props.are_same_affinity(other_player2["name"], player1["name"])) {
                                         return <option value={other_player1["name"]} key={other_player1["name"]}>{other_player1["name"]} - {player1["name"]} et {other_player2["name"]} jouent souvent ensemble</option>
                                     } else {
                                         return <option value={player["name"]} key={player["name"]}>{player["name"]}</option>
@@ -293,9 +234,9 @@ export default function Table(props) {
                                         return <option value={other_player2["name"]} key={other_player2["name"]}>{other_player2["name"]} - {other_player2["name"]} a déjà joué sur la table {props.result["table"]}{props.tables_names[props.result["table"] - 1] && (" - " + props.tables_names[props.result["table"] - 1])}</option>
                                     } else if(player2["tables_played"].includes(other_table)) {
                                         return <option value={other_player2["name"]} key={other_player2["name"]}>{other_player2["name"]} - {player2["name"]} a déjà joué sur la table {other_table}{props.tables_names[other_table - 1] && (" - " + props.tables_names[other_table - 1])}</option>
-                                    } else if(are_same_affinity(other_player1["name"], player2["name"])) {
+                                    } else if(props.are_same_affinity(other_player1["name"], player2["name"])) {
                                         return <option value={other_player2["name"]} key={other_player2["name"]}>{other_player2["name"]} - {player2["name"]} et {other_player1["name"]} jouent souvent ensemble</option>
-                                    } else if(are_same_affinity(other_player2["name"], player1["name"])) {
+                                    } else if(props.are_same_affinity(other_player2["name"], player1["name"])) {
                                         return <option value={other_player2["name"]} key={other_player2["name"]}>{other_player2["name"]} - {player1["name"]} et {other_player2["name"]} jouent souvent ensemble</option>
                                     } else {
                                         return <option value={player["name"]} key={player["name"]}>{player["name"]}</option>
@@ -336,18 +277,19 @@ export default function Table(props) {
                             </div>
                         </div>
                         <div className='row mt-2 mb-5 text-center'>
-                            <div className='col-6'></div>
-                            <div className='col-2'>
+                            <div className='col-4' />
+                            <div className='col text-center'>
                                 {props.result["state"] == "En cours" || editable ?
-                                    <input type="text" className="form-control"
+                                    <input type="text" className="form-control m-auto w-50"
                                         id={`nbTours_R${props.result["round_number"]}T${props.result["table_number"]}`}
                                         name={`nbTours_R${props.result["round_number"]}T${props.result["table_number"]}`}
                                         value={nb_tours}
-                                        placeholder={`Nombre de tours joués`} onChange={handleNbToursCHanged} />
+                                        placeholder={`Nombre de tours`} onChange={handleNbToursCHanged} />
                                 :
-                                    <p className='text-center'>{`${nb_tours} ${nb_tours > 1 ? 'tours joués' : 'tour joué'} ${props.result['duration'] !== undefined ? ('en ' + HHmmss_time(props.result['duration'], 'spoken')) : ''}`}</p>
+                                    <p className='text-center'>{`${nb_tours} ${nb_tours > 1 ? 'tours joués' : 'tour joué'} ${props.result['duration'] !== undefined ? ('en ' + props.HHmmss_time(props.result['duration'], 'spoken')) : ''}`}</p>
                                 }
                             </div>
+                            
                         </div>
 
                         {(player1_score != "" && player2_score != "" && nb_tours != "" && props.result["state"] == "En cours") &&

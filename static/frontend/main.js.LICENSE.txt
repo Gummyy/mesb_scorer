@@ -1,29 +1,83 @@
-/**
- * @license React
- * react-dom.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+/*!**************************!*\
+  !*** ./sources/index.js ***!
+  \**************************/
 
-/**
- * @license React
- * react.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+/*!***********************************!*\
+  !*** ./sources/components/App.js ***!
+  \***********************************/
 
-/**
- * @license React
- * scheduler.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+/*!*************************************!*\
+  !*** ./node_modules/react/index.js ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./sources/components/Round.js ***!
+  \*************************************/
+
+/*!*************************************!*\
+  !*** ./sources/components/Table.js ***!
+  \*************************************/
+
+/*!**************************************!*\
+  !*** ./sources/components/Player.js ***!
+  \**************************************/
+
+/*!*****************************************!*\
+  !*** ./node_modules/react-dom/index.js ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./node_modules/scheduler/index.js ***!
+  \*****************************************/
+
+/*!******************************************!*\
+  !*** ./node_modules/react-dom/client.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./sources/components/RoundTimer.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./sources/components/Scoreboard.js ***!
+  \******************************************/
+
+/*!******************************************!*\
+  !*** ./sources/components/Tournament.js ***!
+  \******************************************/
+
+/*!*******************************************!*\
+  !*** ./sources/components/Commentaire.js ***!
+  \*******************************************/
+
+/*!************************************************!*\
+  !*** ./sources/components/TournamentReport.js ***!
+  \************************************************/
+
+/*!*************************************************!*\
+  !*** ./sources/components/InscriptionsTable.js ***!
+  \*************************************************/
+
+/*!**************************************************!*\
+  !*** ./sources/components/InscriptionsPlayer.js ***!
+  \**************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/react/cjs/react.development.js ***!
+  \*****************************************************/
+
+/*!******************************************************!*\
+  !*** ./sources/components/TournamentInscriptions.js ***!
+  \******************************************************/
+
+/*!*******************************************************!*\
+  !*** ./node_modules/file-saver/dist/FileSaver.min.js ***!
+  \*******************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/react-dom/cjs/react-dom.development.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./node_modules/scheduler/cjs/scheduler.development.js ***!
+  \*************************************************************/

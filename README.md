@@ -15,20 +15,48 @@ Afin de faciliter la gestion des résultats au cours d'un tournoi et de ne conse
  * Modification de toutes les données d'intérêt à tout instant : scores ayant déjà été saisis, appariements insatisfaisants.
  * Possibilité de sauvegarder la totalité des données sous la forme d'un fichier JSON et de repartir d'une sauvegarde.
  * Possibiltié d'utiliser l'application sans Internet à condition de posséder son fichier html et un navigateur.
- * Possibilité d'utiliser l'application sur un téléphone mobile, grace à une interface responsive
+ * Possibilité d'utiliser l'application sur un téléphone mobile, grace à une interface adaptée
  
 # Installation
 Télécharger la dernière version de l'application sous la forme d'un fichier unique mesbg_scorer.html, disponible à cette adresse `https://github.com/Gummyy/mesb_scorer/releases/`
 Pour gérer les inscriptions du tournoi plusieurs possibilités :
- * (à venir) Le site web de DAVAX, via l'option `Générer un fichier d'inscriptions pour MESBG_scorer`. Pour la version hors-ligne, après avoir téléchargé ce fichier, il est possible de l'importer dans MESBG_Scorer.
+ * (à venir) `mesbg-army-tracker.com`, via l'option `Générer un fichier d'inscriptions pour MESBG_scorer`. Après avoir téléchargé ce fichier, il est possible de l'importer dans MESBG_Scorer.
  * L'application possède également une interface permettant de saisir les pseudos, les noms des joueurs et le nom de l'armée des participants
 Une fois les inscriptions importées ou créées, l'application n'a plus besoin d'aucune ressource exterieure pour fonctionner
 
 # Utilisation
 (à venir) Une vidéo explicative des différentes fonctionnalités détaillées dans cette section est disponible à cette adresse : `http://www.youtube.com/video`
 
+Lorsque l'on ouvre le fichier `mesbg_scorer.html`, l'application propose de charger les données d'une sauvegarde (le terme sauvegarde est générique et correspond également à des données ne contenant que les inscriptions, comme par exemple le fichier obtenu en passant par `mesbg-army-tracker.com`).
+Une fois un fichier de sauvegarde choisi, diverses informations comme le nombre de joueurs inscrits, de rounds terminés, de parties jouées sont affichées.
+Si aucune sauvegarde n'est choisi, il est possible de poursuivre et de générer les inscriptions à la main en utilisant le bouton *Inscriptions*
+
+L'interface se décopose en deux vues distinctes :
+ * la vue *Inscriptions* permettant de réaliser les inscriptions
+ * la vue *Tournoi*
+
+On passe de l'une à l'autre à l'aide du bouton gris tout en haut de la page que l'on soit sur la vue *Inscriptions* ou la vue *Tournoi*
+
+## Vue *Inscriptions*
+Une page permettant de rentrer les pseudonymes, noms et armées des joueurs est disponible en cliquant sur le bouton *Inscriptions* présent sur la page d'accueil et également en gris depuis la vue *Tournoi* pendant le tournoi. On peut, à tout moment, corriger le pseudonyme d'un joueur, ajouter des informations concernant son nom ou son armée afin de pouvoir par la suite effectuer des recherches sur ces données.
+
+Cette interface s'articule en deux vues :
+ * la vue *Joueurs* permettant d'ajouter ou de supprimer des joueurs, ainsi que d'éditer les informations de chaque joueur
+ * la vue *Tables* permettant de préciser le nom des différentes tables, ce qui peut être utile lorsqu'il y en a beaucoup pour les différencier ou pour indiquer aux joueurs où elles se trouvent.
+
+Il est impossible de supprimer un joueur ayant déjà participé à des parties pendant le tournoi, car cela ferait planter l'application (on a toujours besoin de ses informations pour les rounds précédents). On peut seulement modifier son pseudonyme pour en faire un joueur mort en lui donnant un pseudonyme avec des espaces tel que ' '.
+
+Il est possible d'ajouter un nouveau joueur en cours de tournoi, ce qui ajoutera automatiquement un joueur mort avec lui afin de préserver un nombre de joueurs pair. Etant donné qu'il est impossible de supprimer un autre joueur mort qui aurait déjà fait des parties (des joueurs auraient été appareillés avec lui lors de précédents rounds), il est donc possible d'avoir plusieurs joueurs morts. Même dans le cas où il y a plusieurs joueurs morts, les joueurs morts sont automatiquement appareillés entre eux, sauf s'il y en a un nombre impair (ce qui signifie que le nombre de joueurs réels est également impair), auquel cas l'un d'eux sera utilisé lors des appariements des vrais joueurs.
+
+## Vue *Tournoi*
+Toutes les autres fonctionnalités présentées dans la suite de cette section sont présentes dans la vue tournoi. Elle permet :
+ * de créer de nouveaux rounds et de gérer les appariements
+ * de saisir et de consulter les résultats des parties
+ * de consulter les scores des joueurs à la fin de chaque round
+ * de sauvegarder l'ensemble des données du tournoi à tout instant
+
 ## Gestion des appariements
-La gestion des appariements utilise les options sélectionnables suivantes :
+La gestion des appariements utilise les options sélectionnables (ou déselectionnables) suivantes :
  * Ignorer les précédents appariements (deux joueurs s'étant déjà rencontrés peuvent rejouer ensemble)
  * Ignorer les précédentes tables occupées (un joueur peut jouer plusieurs fois sur la même table)
  * Ignorer les groupes d'affinité (des joueurs habitués à jouer ensemble peuvent s'affronter)
@@ -41,13 +69,14 @@ La deuxième étape crée l'appariement.
 Pour le premier round, deux méthodes sont possibles :
  * Utiliser l'ordre d'importation des données, si l'appariement a déjà été fait au préalable via une autre méthode
  * Utiliser un ordre aléatoire, que l'on peut régénérer autant de fois qu'on le souhaite et modifier, si on le souhaite, les appariements restants à la main
+
 Lors de la création du round, l'option "Ignorer les groupes d'affinité" est par défaut décochée et permet aux joueurs jouant régulièrement ensemble de ne pas s'affronter.
 Par défaut, la première proposition d'appariements utilise l'ordre d'importation des données, que l'on peut ensuite rendre aléatoire à l'aide du bouton *Régénérer*
 
 ### Rounds suivants
 L'appariement utilise cet algorithme :
 ```
-La liste des joueurs est triée, selon le score total (prennant en compte le goal aveerage)
+La liste des joueurs est triée, selon le score total (prennant en compte le goal average)
 Pour chaque joueur, sélectionné dans l'ordre, du mieux classé au moins bien classé :
 	On lui cherche un adversaire parmi les joueurs non encore appareillés, toujours triés par ordre de leur classement :
 	Pour chaque joueur, on vérifie si l'appariement que l'on est en train de créer n'a pas encore eu lieu si l'option "Ignorer les précédents appariements" est déselectionnée.
@@ -56,7 +85,7 @@ Pour chaque joueur, sélectionné dans l'ordre, du mieux classé au moins bien c
 	On cherche désormais une table pour cet appariement, parmi la liste des tables non encore utilisées pour un autre appariement, triée de la plus forte à la plus faible table.
 	Pour chaque table, on vérifie si aucun des deux joueurs n'a déjà joué dessus si l'option "Ignorer les précédentes tables occupées" est déselectionnée. 
 ```
-Cet algorithme est imparfait mais réplique le fonctionnement des appariements qui est réalisé par les fichiers Excel actuellement utilisés en ajoutant la gestion des options. Si l'on sélectionne toutes les options, on obtient exactement le comportement des excels habituels où l'on gère tous les confilts à la main.
+Cet algorithme est imparfait mais réplique le fonctionnement des appariements qui est réalisé par les fichiers Excel actuellement utilisés en ajoutant la gestion des options. Si l'on sélectionne toutes les options, on obtient exactement le comportement des excels habituels où l'on gère tous les confilts à la main après avoir trié les joueurs selon leurs scores.
 A l'inverse, l'utilisation des trois options en mode désactivée permet d'assurer un contrôle supplémentaire sur l'appariement mais occasionne des situations où des joueurs sont appareillés avec un plus gros écart de classement.
 
 ### Manipulations
@@ -66,19 +95,22 @@ Cet appariement est affiché avec des messages pour indiquer les problèmes suiv
  * L'un des deux joueurs a déjà joué sur la table sur laquelle on l'a appareillé.
  * Les deux joueurs ont déjà joué l'un contre l'autre.
  * Un écart de score total entre les deux joueurs supérieur à 3 est observé
+
 Dans un second temps, il est possible de réaliser des modifications à la main si certains problèmes subsistent.
 Il est possible d'échanger l'un des deux joueurs ou la table de deux appariements différents autant de fois qu'on le souhaite.
 
 ### Début du round
-Une fois l'appariement terminé, une page permet de réaliser les annonces des appariements et, en cas de problème, de revenir en arrière pour modifier des éléments.
-Si auune incohérence n'est soulignée par les joueurs, on peut démarrer le round (ce qui initialise l'heure de début du round)
+Une fois l'appariement terminé, une page permet de réaliser les annonces des appariements et de renseigner l'heure de commencement des parties. C'est à ce moment-là que les joueurs sont
+informés de leurs appariements. En cas de problème, il est donc possible de revenir en arrière pour modifier des éléments.
+Si aucune incohérence n'est soulignée par les joueurs, on peut démarrer le round.
 
 ## Saisie des scores
-Le round passe en mode "En cours"
+Le round passe en mode "En cours". On voit alors affiché l'heure de début des parties si elle n'est pas encore passée. Dès qu'on a passé l'heure de début des parties, on voit alors l'heure du dernier round, qui devient rouge lorsque est également passée, afin de rappeler aux organisateurs de l'annoncer aux joueurs.
 La saisie des scores permet de saisir trois informations sur une partie :
  * le score du joueur 1
  * le score du joueur 2
  * le nombre de tours joués
+
 En plus des informations saisies, l'application enregistre également l'heure à laquelle les résultats sont renseignés afin de déterminer la durée de la partie.
 
 ### Manipulations
@@ -88,7 +120,8 @@ Afin de trouver la table où reseigner un résultat, il est possible de s'aider 
  * Afficher les parties terminées
  * Afficher les parties du round X, X pouvant également être "Tous les rounds"
 
-Ces options permettent de naviguer facilement dans les résultats et ne pas surcharger l'affichage. 
+Ces options permettent de naviguer facilement dans les résultats et ne pas surcharger l'affichage.
+A tout moment, où que l'on se trouve dans la vue *Tournoi*, il est possible de revenir à la barre de recherche en appuyant sur *F*
 
 #### Editer un résultat
 Pour éditer un résultat, se placer dans la vue "Round" et sélectionner le résultat, puis cliquer sur éditer.
@@ -115,11 +148,14 @@ Lorsque tous les résultats du round sont renseignés, l'option "Terminer le rou
 
 ## Sauvegarder
 Il est possible à tout moment (pendant les inscriptions, l'appariement, la saisie des scores, avant l'appariement du prochain round, ...) de sauvegarder l'ensemble des données de l'application en utilisant le bouton "Sauvegarder".
-Ce bouton déclenche le téléchargement d'un fichier nommé save.json.
+Ce bouton déclenche le téléchargement d'un fichier nommé selon la date et l'heure du moment du clic avec le format suivant :
+```
+YY-MM-DD__hh-mm-ss
+```
 
-Si l'on souhaite poursuivre un tournoi sur un autre périphérique ou reprendre dans tout autre cas à partir d'une sauvegarde, il suffit de recharger la page ou de relancer MESBG_Scorer et d'importer la sauvegarde ainsi obtenue.
+Si l'on souhaite poursuivre un tournoi sur un autre périphérique ou reprendre à partir d'une sauvegarde, il suffit de recharger la page ou de relancer le fichier MESBG_Scorer.html et d'importer la sauvegarde ainsi obtenue en utilisant le bouton *Parcourir* de l'interface.
 
-Dans les deux cas, l'application rechargera l'ensemble des données présentes lors de la sauvegarde à l'exception des filtres et de la recherche en cours, qui seront donc à saisir à nouveau.
+Après avoir choisi un fichier, l'application recharge l'ensemble des données présentes lors de la sauvegarde à l'exception des filtres et de la recherche en cours, qui seront donc à saisir à nouveau.
 
 # Export
 Les résultats au sein de l'application peuvent se représenter sous la forme d'un fichier JSON qui a cette structure :

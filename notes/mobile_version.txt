@@ -1,0 +1,31 @@
+version mobile :
+
+Inscriptions -> Joueurs
+ * Nom complet prend deux lignes, ce qui désaligne les <input />
+	=> J'ai viré le complet
+		=> OK
+Nouveau round
+ * Les labels des options sont trop longues pour être affichées à droite. Les checkbox ne sont pas alignés. Il faut les mettre en bas.
+	=> Pour l'instant, on a deux col sans spécifications. Voir la doc bootstrap pour les détails
+		=> OK
+
+Prêt à commencer
+ * Les "prêt à commencer" de chaque table sont un peu chargés
+	=> BALEK
+
+
+En cours 
+ * Les placeholders dans les input sont trop longues
+	=> NOK, mais je crois que je m'en fous
+ * Le <input /> du nombre de tours est trop petit
+	=> Ok mais il y a moyen de faire mieux
+
+Terminé
+ * Le commentaire est trop petit (col-2 incompatible avec affichage téléphone) Visuellement, ça devrait être du même ordre que le commentaire
+	=> Ok mais il y a moyen de faire mieux
+
+Résultat
+ * Rien n'est aligné, c'est inexploitable pour le moment. Mettre un min-width ou désactiver carrément l'option
+	=> OK
+Resultats finaux est nickel en revanche
+	=> Très OK

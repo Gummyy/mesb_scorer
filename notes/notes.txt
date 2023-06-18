@@ -111,4 +111,21 @@ Virer le select qui apparaît en haut de l'écran (apparemment, c'est le nombre 
 Remplacer le ajouter un player par une icone "+"
 	=> OK
 
-Remplacer le col-6 / col-2 sur les tables pour le nombre de tours joués
+Ne pas forcer l'affichage détaillé pour la création du nouveau round
+	=> OK
+
+Réfléchir à une façon de simplifier le partage des appariements (Exporter en csv, make a pretty picture, ...)
+	=> Tester domtoimage
+
+Nommer la sauvegarde en fonction du timestamp
+	=> OK
+
+Transmettre are_same_affinity() plutôt que de la dupliquer
+	=> OK
+
+Changed =>
+	handleEditAppariement(new_table => parseInt(new_table))
+	saveScore(rounds[active_round - 1] => rounds[cur_round - 1])
+	make_pairs(logs)
+	saveAll(save_name)
+	handleBackToPairs(resets the scenario, now)

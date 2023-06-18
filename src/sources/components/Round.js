@@ -23,6 +23,32 @@ export default function Round(props) {
         setDateStart(event.target.value);
     }
 
+    const HHmmss_time = (duration, type) => {
+        let positive = duration >= 0;
+        if(!positive) {
+            duration = -duration
+        }
+        duration = parseInt(duration / 1000);
+        const SS = duration % 60;
+        duration = parseInt(duration / 60);
+        const MM = duration % 60;
+        duration = parseInt(duration / 60);
+        
+        if(type == "timer") {
+            return `${positive ? '' : '-'}${duration.toString().padStart(2, '0')}:${MM.toString().padStart(2, '0')}:${SS.toString().padStart(2, '0')}`;
+        } else if(type == "spoken") {
+            if(duration == 0) {
+                if(MM == 0) {
+                    return `${positive ? '' : '-'}${SS} seconde${SS > 1 ? 's' : ''}`
+                } else {
+                    return `${positive ? '' : '-'}${MM} minute${MM > 1 ? 's' : ''} et ${SS} seconde${SS > 1 ? 's' : ''}`
+                }
+            } else {
+                return `${positive ? '' : '-'}${duration} heure${duration > 1 ? 's' : ''}, ${MM} minute${MM > 1 ? 's' : ''} et ${SS} seconde${SS > 1 ? 's' : ''}`
+            }
+        }
+    }
+
     const get_other_result = function(table, player) {
         let player1_name = undefined;
         let player2_name = undefined;
@@ -69,7 +95,7 @@ export default function Round(props) {
 
     console.log(props.players)
 
-    let is_finished = true;
+    let is_finished = props.results.reduce((accumulator, result) => accumulator && result["state"] == "Terminé", true);
     if (props.results === undefined) {
         return;
     } else {
@@ -78,16 +104,14 @@ export default function Round(props) {
                 <div className="row mt-5">
                     <h2 className='mb-4'>Round {props.round["round_number"]} - {props.round["scenario"]} ({props.round["state"]})</h2>
                 </div>
-                {props.round["started_at"] !== undefined && props.round["state"] == "En cours" && (
-                    <RoundTimer started_at={props.round["started_at"]} last_turn={props.round["started_at"] + 2*60*60*1000 + 15*60*1000} />
+                {props.round["started_at"] !== undefined && !is_finished && props.round["state"] == "En cours" && (
+                    <RoundTimer started_at={props.round["started_at"]} last_turn={props.round["started_at"] + 2*60*60*1000 + 15*60*1000} HHmmss_time={HHmmss_time} />
                 )}
                 {props.results.map(result => {
-                    if(result["state"] != "Terminé") {
-                        is_finished = false;
-                    }
                     return <Table result={result} players={props.players} key={`R${result["round_number"]}T${result["table"]}`}
                             saveScore={props.saveScore} handleEditRound={props.handleEditRound} get_other_result={get_other_result}
-                            handleEditAppariement={props.handleEditAppariement} tables_names={props.tables_names} detailedView={props.detailedView} />;
+                            handleEditAppariement={props.handleEditAppariement} tables_names={props.tables_names} detailedView={props.detailedView} are_same_affinity={props.are_same_affinity}
+                            HHmmss_time={HHmmss_time} />;
                 })}
             
                 {props.round["state"] == "Prêt à commencer" && (

@@ -1,0 +1,15 @@
+Clean du code et suppression de certaines fonctions dupliquées dans le but d'éviter des éventuels futurs bugs
+-------------------
+
+Adaptations pour la version mobile + amélioration de la visibilité pour le message indiquant le nombre de tours et la durée des parties
+-------------------
+
+Les joueurs morts sont désormais automatiquement appareillés si il y en a un nombre pair. S'il y en a un nombre impair, seul un joueur mort peut être appareillé avec un autre joueur.
+-------------------
+
+
+Correction d'un bug majeur où certains appariements n'étaient pas générés lorsque les conditions étaient impossibles
+
+Correction d'un bug mineur où le message récapitulatif de la partie n'était pas mis à jour lorsqu'on entrait à nouveau le même score
+
+L'heure de fin de round n'est désormais plus affichée lorsque l'on modifie les résultats d'un round précédent ou que toutes les parties du round en cours sont terminées.

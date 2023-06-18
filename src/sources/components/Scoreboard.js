@@ -20,7 +20,7 @@ export default function Scoreboard(props) { // players_data, rounds_data
         <div className="container-fluid">
             {props.players_data.sort((a, b) => b["results_with_goalaverage"][last_round] - a["results_with_goalaverage"][last_round]).map((player, i) => {
                 return (
-                    <div className='row mb-2' key={player["name"]} style={{overflow: 'auto', width: `${props.rounds_data.length > 2 ? 50*props.rounds_data.length : 100}%`}}>
+                    <div className='row mb-2' key={player["name"]} style={{overflow: 'auto', width: `${props.rounds_data.length > 2 ? 50*props.rounds_data.length : 100}%`, minWidth: props.resultats_finaux ? 350*props.rounds_data.length : 500*props.rounds_data.length}}>
 
                         {props.rounds_data.map((round) => {
                             return (
