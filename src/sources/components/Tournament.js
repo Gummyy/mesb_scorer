@@ -449,7 +449,8 @@ export default function Tournament(props) {
             let player2 = -1;
             for(let j = i+1; j < sorted_players.length; j++) {
                 // We check if the player has already been added to the new_results
-                if(new_results.map((result) => result["player2"]).includes(sorted_players[j]["name"]) || (sorted_players[i]["name"].replace(/\s/g, '').length == 0 && nb_dead_players%2 == 0)) {
+                if( new_results.map((result) => result["player2"]).includes(sorted_players[j]["name"]) ||
+                    (sorted_players[i]["name"].replace(/\s/g, '').length != 0 && sorted_players[j]["name"].replace(/\s/g, '').length == 0 && nb_dead_players%2 == 0)) {
                     continue;
                 }
 
@@ -478,7 +479,8 @@ export default function Tournament(props) {
                 //alert("Le joueur "+ sorted_players[i]["name"] +" a déjà joué contre tous les joueurs non appareillés !");
                 for(let j = i+1; j < sorted_players.length; j++) {
                     // We check if the player has already been added to the new_results
-                    if(new_results.map((result) => result["player2"]).includes(sorted_players[j]["name"]) || (sorted_players[i]["name"].replace(/\s/g, '').length == 0 && nb_dead_players%2 == 0)) {
+                    if( new_results.map((result) => result["player2"]).includes(sorted_players[j]["name"]) ||
+                        (sorted_players[i]["name"].replace(/\s/g, '').length != 0 && sorted_players[j]["name"].replace(/\s/g, '').length == 0 && nb_dead_players%2 == 0)) {
                         continue;
                     } else {
                         player2 = j;
