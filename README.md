@@ -18,11 +18,37 @@ Afin de faciliter la gestion des résultats au cours d'un tournoi et de ne conse
  * Possibilité d'utiliser l'application sur un téléphone mobile, grace à une interface adaptée
  
 # Installation
+Voici les étapes à suivre pour installer l'application. J'ai séparé cette section en une rubrique `Développeurs` pour les personnes souhaitant contribuer au projet et une rubrique `Utilisateurs` pour les personnes souhaitant simplement utiliser l'application.
+
+## Utilisateurs
 Télécharger la dernière version de l'application sous la forme d'un fichier unique mesbg_scorer.html, disponible à cette adresse `https://github.com/Gummyy/mesb_scorer/releases/`
 Pour gérer les inscriptions du tournoi plusieurs possibilités :
  * (à venir) `mesbg-army-tracker.com`, via l'option `Générer un fichier d'inscriptions pour MESBG_scorer`. Après avoir téléchargé ce fichier, il est possible de l'importer dans MESBG_Scorer.
  * L'application possède également une interface permettant de saisir les pseudos, les noms des joueurs et le nom de l'armée des participants
 Une fois les inscriptions importées ou créées, l'application n'a plus besoin d'aucune ressource exterieure pour fonctionner
+
+## Développeurs
+Afin de contribuer au projet, cloner le répertoire sur son espace personnel, créer une nouvelle branche (il est impossible de pusher sur la master) et exécuter :
+```
+npm install
+```
+
+Une fois ceci fait, il est normalement possible de lancer
+```
+npm run dev
+```
+qui va lancer webpack en mode dev (tout changement d'un fichier source lance une "recompilation" du projet sans entrer de nouvelles commandes). Il est possible que certains paquets ne soient pas encore installés sur votre machine, ne pas hésiter à les récupérer également avec les `npm install` nécessaires.
+
+Une fois que `npm run dev` est lancé, vous pouvez faire vos modifications dans les fichiers contenus dans `src` et observer le résultat en ouvrant `frontend/MESBG_scrorer.html` dans votre navigateur.
+L'installation est très légère car c'est comme ça que j'aime travailler et je vis bien avec les incovénients de ne pas avoir d'espace de stockage ni de serveur en dev, car l'un des objectifs est de ne pas nécessiter de connexion internet.
+
+### Présentation des dossiers
+Pour les développeurs qui voudraient contribuer au projet, voici une présentation des répertoires :
+ * `notes` contient l'ensemble des notes prises au cours du développement du programme. Le seul fichier susceptible d'intéresser un développeur est `notes/new_release.txt` qui contient la description des nouveautés / modifications depuis la dernière release et qui me permet de générer le contenu de la release sans avoir à naviguer dans les noms des commits, qui sont donc laissés plus courts.
+ * `saves` contient une liste de sauvegardes m'ayant servi à tester l'application. Je conduis mes tests unitaires sur ces sauvegardes lorsque je n'ai pas envie d'entrer toutes les inscriptions.
+ * `src` contient le répertoire npm de l'application, avec l'ensemble du code, les modules npm (ici non clonés) et les fichiers de config permettant, je l'espère, de pouvoir rapidement récupérer le projet sur une nouvelle machine.
+ * `static` contient les données statiques de l'application. Etant donné qu'il n'y a ni image ni css supplémentaire, il s'agit en réalité de bootstrap et du fichier `static/frontend/main.js` (il fait également partie du git ignore désormais) qui correspond à la version "compilée" de `src/sources/index.js` par webpack
+ * `template` contient les fichiers template. Son utilisation est superflu ici puisqu'il n'y a que `frontend/MESBG_scrorer.html` qui contient la page html important le JS de l'application. Attention, pour les releases, le fichier ne contient plus les liens vers les différents fichiers mais bien le contenu intégral 
 
 # Utilisation
 (à venir) Une vidéo explicative des différentes fonctionnalités détaillées dans cette section est disponible à cette adresse : `http://www.youtube.com/video`

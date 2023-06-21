@@ -1,1 +1,5 @@
 src/node_modules
+static/frontend/bootstrap
+static/frontend/main.js
+static/frontend/main.js.LICENSE
+notes/notes.txt

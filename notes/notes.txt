@@ -67,11 +67,6 @@ Interface d'inscriptions
 		=> OK
 ------------------------
 
-Demander à Shaka :
-	- l'ensemble des données issues de DAVAX que l'on souhaite conserver pour une éventuelle analyse des résultats après le déroulement du tournoi.
-	- lui donner la structure du json qu'il doit demander à DAVAX de me fournir en conséquence. Il s'agit également de mettre en place une option "Exporter les inscriptions pour MESBG_scorer" idéalement.
-	- lui demander la liste des joueurs qui jouent souvent ensemble afin de créer les groupes.
-Pour l'instant, j'ai mis :
 const players_affinity = [
         [
             "Manadar", "decalogus"
