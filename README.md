@@ -51,7 +51,7 @@ Pour les développeurs qui voudraient contribuer au projet, voici une présentat
  * `template` contient les fichiers template. Son utilisation est superflu ici puisqu'il n'y a que `frontend/MESBG_scrorer.html` qui contient la page html important le JS de l'application. Attention, pour les releases, le fichier ne contient plus les liens vers les différents fichiers mais bien le contenu intégral 
 
 # Utilisation
-(à venir) Une vidéo explicative des différentes fonctionnalités détaillées dans cette section est disponible à cette adresse : `http://www.youtube.com/video`
+Une vidéo de présentation de l'application est disponible à [cette adresse](https://www.youtube.com/watch?v=rw5fiCCqzaA)
 
 Lorsque l'on ouvre le fichier `mesbg_scorer.html`, l'application propose de charger les données d'une sauvegarde (le terme sauvegarde est générique et correspond également à des données ne contenant que les inscriptions, comme par exemple le fichier obtenu en passant par `mesbg-army-tracker.com`).
 Une fois un fichier de sauvegarde choisi, diverses informations comme le nombre de joueurs inscrits, de rounds terminés, de parties jouées sont affichées.
