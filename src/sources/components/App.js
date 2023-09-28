@@ -25,7 +25,7 @@ export default function App() {
   let [new_round_data, setNewRoundData] = React.useState({});
   let [new_round_displayed, setNewRoundDisplayed] = React.useState(false);
   let [tables_names, setTablesNames] = React.useState([]);
-  let [save_file, setSaveFile] = React.useState("");
+  let [teams, setTeams] = React.useState([]);
   
   let [view, setView] = React.useState("menu");
 
@@ -198,7 +198,7 @@ export default function App() {
 
       {view == "inscriptions" &&
       <TournamentInscriptions switchToTournaments={switchToTournaments} players_data={players_data} results={results} backToMenu={backToMenu} tables_names={tables_names}
-      setPlayersData={setPlayersData} setResults={setResults} setTablesNames={setTablesNames} rounds={rounds} />
+      setPlayersData={setPlayersData} setResults={setResults} setTablesNames={setTablesNames} rounds={rounds} teams={teams} setTeams={setTeams} />
       }
     </div>
   );

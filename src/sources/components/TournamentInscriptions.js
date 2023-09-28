@@ -2,6 +2,8 @@ import React from 'react';
 
 import InscriptionsPlayer from './InscriptionsPlayer';
 import InscriptionsTable from './InscriptionsTable';
+import InscriptionsTeams from './InscriptionsTeams';
+import InscriptionsNewTeamPlayer from './InscriptionsNewTeamPlayer';
 
 export default function TournamentInscriptions(props) {
     /*let [players_data, setPlayersData] = React.useState(props.players_data);
@@ -10,9 +12,13 @@ export default function TournamentInscriptions(props) {
     let [players_data, setPlayersData] = [props.players_data, props.setPlayersData];
     let [results_data, setResultsData] = [props.results, props.setResults];
     let [tables_names, setTablesNames] = [props.tables_names, props.setTablesNames];
+    let [teams, setTeams] = [props.teams, props.setTeams];
     let rounds = props.rounds;
 
-    let [view, setView] = React.useState("players")
+    let [view, setView] = React.useState("players");
+
+    let [new_team_displayed, setNewTeamDisplayed] = React.useState(false);
+    let [new_team_players, setNewTeamPlayers] = React.useState(players_data.map((player) => false));
 
     const handleAddPlayer = (event) => {
         event.preventDefault();
@@ -80,13 +86,24 @@ export default function TournamentInscriptions(props) {
     const handleReset = (event) => {
         event.preventDefault();
 
-        if(results_data !== undefined && results_data.length > 0) {
-            alert("Impossible de réinitialiser la liste des joueurs, le tournoi a déjà commencé.");
-            return;
-        }
+        if(view === "teams") {
+            if(teams.reduce((accumulator, team) => [...accumulator, ...team["opponents_played"]], []).length > 0) {
+                alert("Impossible de reset les équipes. Des appariements ont déjà eu lieu.");
+                return;
+            }
 
-        setPlayersData([]);
-        setTablesNames([]);
+            setTeams([]);
+        } else {
+
+            if(results_data !== undefined && results_data.length > 0) {
+                alert("Impossible de réinitialiser la liste des joueurs, le tournoi a déjà commencé.");
+                return;
+            }
+
+            setPlayersData([]);
+            setTablesNames([]);
+            setNewTeamDisplayed(false);
+        }
     }
     
     const handleStartTournament = (event) => {
@@ -238,6 +255,157 @@ export default function TournamentInscriptions(props) {
         setView("tables");
     }
 
+    const handleViewTeams = (event) => {
+        event.preventDefault();
+        setView("teams");
+    }
+
+    // Team stuff
+
+    const playerChangeTeam = (event) => {
+        event.preventDefault();
+        const cur_player = event.currentTarget.getAttribute("player");
+        const cur_new_team = event.currentTarget.getAttribute("newteam");
+
+        setPlayersData((players) => {
+            return players.map((player) => {
+                if(player["name"] === cur_player) {
+                    player["team"] = cur_new_team;
+                }
+                return player;
+            })
+        })
+    }
+
+    const handleAddTeam = (event) => {
+        event.preventDefault();
+
+        if(new_team_displayed) {
+            alert("Une équipe est déjà en cours de création. Vous devez valider ses joueurs avant d'en créer d'autres.")
+            return false;
+        }
+
+        let i = 1;
+        let current_team_names = teams.reduce((accumulator, team) => [...accumulator, team["name"]], []);
+        while(current_team_names.includes(`Nouvelle équipe ${i}`)) {
+            i++;
+        }
+        setTeams((teams) => [...teams, {
+            "name": `Nouvelle équipe ${i}`,
+            "opponents_played": [],
+            "results": [],
+            "results_with_goalaverage": []
+        }]);
+
+        setNewTeamDisplayed(true);
+        setNewTeamPlayers(players_data.map((player) => false));
+    }
+
+    const editTeam = (event) => {
+        event.preventDefault();
+
+        const cur_index = parseInt(event.currentTarget.getAttribute("index"));
+        const cur_new_team_name = event.currentTarget.getAttribute("newname");
+        const cur_old_team_name = event.currentTarget.getAttribute("oldname");
+
+        if(teams.reduce((accumulator, team) => [...accumulator, team["name"]], []).includes(cur_new_team_name)) {
+            alert(`Impossible d'attribuer ce nom. Une équipe s'appelle déjà ${cur_new_team_name}`);
+            return false;
+        }
+
+        //console.log(`Trying to change ${cur_old_team_name} (${cur_index}) to ${cur_new_team_name}`)
+
+        setTeams((teams) => {
+            return teams.map((team, index) => {
+                //console.log("Before :")
+                //console.log(team)
+                if(cur_index === index) {
+                    team["name"] = cur_new_team_name;
+                }
+                //console.log("After :")
+                //console.log(team)
+                return {...team,
+                    "opponents_played": team["opponents_played"].map((team_name) => team_name === cur_old_team_name ? cur_new_team_name : team_name)
+                };
+            });
+        });
+
+        setPlayersData((players) => {
+            return players.map((player) => {
+                if(player["team"] === cur_old_team_name) {
+                    player["team"] = cur_new_team_name;
+                }
+                return player;
+            });
+        });
+
+        return true;
+    }
+
+    const deleteTeam = (event) => {
+        event.preventDefault();
+
+        const cur_team_name = event.currentTarget.getAttribute("team");
+        const cur_index = parseInt(event.currentTarget.getAttribute("index"));
+
+        if(teams.reduce((accumulator, team) => [...accumulator, ...team["opponents_played"]], []).includes(cur_team_name)) {
+            alert("Impossible de supprimer une équipe qui a déjà été appareillée");
+            return;
+        }
+
+        console.log(`Trying to delete team ${cur_team_name} (${cur_index})`);
+
+        setTeams((teams) => {
+            return teams.filter((team, index) => team["name"] !== cur_team_name || index !== cur_index);
+        });
+        setPlayersData((players) => {
+            return players.map((player) => {
+                if(player["team"] === cur_team_name) {
+                    player["team"] = "";
+                }
+                return player;
+            });
+        });
+        if(cur_index === teams.length - 1)
+            setNewTeamDisplayed(false);
+    }
+
+    const handleCheckedChange = (event) => {
+        const cur_index = parseInt(event.currentTarget.getAttribute("index"));
+
+        setNewTeamPlayers((new_team_players) => {
+            return new_team_players.map((is_checked, index) => {
+                if(index !== cur_index) {
+                    return is_checked;
+                } else {
+                    return event.target.checked;
+                }
+            })
+        })
+    }
+
+    const handleValidateNewTeam = (event) => {
+        event.preventDefault();
+        console.log(`Trying to validate new team ${teams[teams.length - 1]["name"]}`)
+        console.log(new_team_players);
+        setPlayersData((players) => {
+            return players.map((player, index) => {
+                if(new_team_players[index]) {
+                    player["team"] = teams[teams.length - 1]["name"];
+                    console.log(`Player ${player["name"]} added to team ${teams[teams.length - 1]["name"]}`);
+                }
+                return player;
+            })
+        })
+        setNewTeamDisplayed(false);
+    }
+
+    const handleAbortNewTeam = (event) => {
+        event.preventDefault();
+        setNewTeamDisplayed(false);
+    }
+
+
     return (
         <div className='container'>
             <h1 className='text-center'>MESBG Scorer - Inscriptions</h1>
@@ -248,9 +416,10 @@ export default function TournamentInscriptions(props) {
             </div>
 
             <div className='row'>
-                <div className='col text-center'>
+                <div className='col text-center mb-3'>
                     <button type="button" className='btn btn-outline-primary mx-2' onClick={handleViewPlayers}>Joueurs</button>
                     <button type="button" className='btn btn-outline-primary mx-2' onClick={handleViewTables}>Tables</button>
+                    <button type="button" className='btn btn-outline-primary mx-2' onClick={handleViewTeams}>Equipes</button>
                 </div>
             </div>
                 {view == "players" && 
@@ -286,6 +455,48 @@ export default function TournamentInscriptions(props) {
                         </div>
                     </div>
                 </div>}
+                {view == "teams" && 
+                <div>
+                    {teams.length === 0 &&
+                        <p>Aucune équipe pour le moment</p>
+                    }
+                    {teams.map((team, index) => {
+                        return (
+                            <InscriptionsTeams key={index} team={team} index={index} editTeam={editTeam} deleteTeam={deleteTeam} players_data={players_data} playerChangeTeam={playerChangeTeam} teams={teams} />
+                        )
+                    })}
+                    {new_team_displayed &&
+                    <div>
+                        {
+                            players_data.map((player, index) => {
+                                if(player["name"].trim() !== "" && (player["team"] === undefined || player["team"] === "")) {
+                                    return (
+                                        <InscriptionsNewTeamPlayer player={player} index={index} key={index} handleCheckedChange={handleCheckedChange} is_checked={new_team_players[index]} />
+                                    )
+                                }
+                            })
+                        }
+                        <div className='row'>
+                            <div className='col text-end'>
+                                {new_team_players.reduce((accumulator, current) => accumulator || current, false) &&
+                                    <button title="Valider" type="button" className='btn btn-success mt-5 mx-3' onClick={handleValidateNewTeam}>OK</button>
+                                }
+                                <button className='btn btn-danger mx-3 mt-5' btnpressed="table" onClick={handleAbortNewTeam}>Annuler</button>
+                            </div>
+                        </div>
+                    </div>}
+                    <div className='row'>
+                        <div className='col text-end'>
+                            <button title="Ajouter une équipe" type="button" className='btn btn-outline-primary mt-5 mx-3' onClick={handleAddTeam}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
                 <div className='row'>
                     <div className='col text-end'>
                         <button type="button" className='btn btn-warning mt-5 mx-3' onClick={handleReset}>Reset</button>

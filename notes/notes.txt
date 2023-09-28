@@ -124,3 +124,5 @@ Changed =>
 	make_pairs(logs)
 	saveAll(save_name)
 	handleBackToPairs(resets the scenario, now)
+
+Dans les résultats, ne carrément pas afficher les joueurs morts
